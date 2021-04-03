@@ -1,7 +1,7 @@
 {
-  "name": "@jacques/serverless-plugin-merge-api-integration",
-  "version": "1.0.0",
-  "description": "Serverless plugin for merging a set of aws integration files to an api specification",
+  "name": "serverless-openapi-integration-helper",
+  "version": "0.8.0",
+  "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
