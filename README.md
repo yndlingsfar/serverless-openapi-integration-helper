@@ -1,4 +1,4 @@
-# Serverless pluing: AWS Gateway integration helper
+# Serverless Plugin: AWS Gateway integration helper
 
 The plugin provides helper functions for a seamless AWS Gateway integration
 

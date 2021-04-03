@@ -1,7 +1,7 @@
 {
   "name": "serverless-openapi-integration-helper",
   "keywords": ["serverless", "aws", "oas3", "gateway"],
-  "version": "0.8.1",
+  "version": "0.8.3",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "index.js",
   "scripts": {
