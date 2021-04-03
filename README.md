@@ -79,7 +79,7 @@ paths:
 
 ```
 
-your serverless file would like like:
+your serverless.yml file would look like:
 
 ```
 service:
