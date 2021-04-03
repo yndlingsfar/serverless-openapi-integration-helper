@@ -49,8 +49,8 @@ class MergeIntegrationPlugin {
         };
 
         this.hooks = {
-            'merge:readDefinition': this.readDefinition.bind(this),
-            'merge:writeDefiniton': this.writeDefiniton.bind(this)
+            'integration:merge:readDefinition': this.readDefinition.bind(this),
+            'integration:merge:writeDefiniton': this.writeDefiniton.bind(this)
         };
     }
 

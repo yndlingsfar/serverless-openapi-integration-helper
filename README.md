@@ -135,3 +135,9 @@ serverless integration merge --definition oas3.yml --integration production.yml 
 serverless deploy --stage=prod
 ```
 
+It is possible to merge all yml files in a directory by specifying a directory as output parameter
+```
+serverless integration merge --definition oas3.yml --integration some_directory --output api.yml
+serverless deploy --stage=prod
+```
+
