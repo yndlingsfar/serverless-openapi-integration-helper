@@ -6,8 +6,28 @@ The plugin provides helper functions for a seamless AWS Gateway integration
 In some cases it is needed to separate the x-amazon-apigateway extension syntax from your open api specification file. 
 A valid use-cases could be to keep your code clean or if you want to define different gateway types targets based on your environment (http_proxy and mock e.g.)
 
-Given you have following OAS3 file *oas3.yml*
+## Table of contents
+
+- [Install](#install)
+- [Basic Usage](#basic-usage)
+
+## Install
+
+Run `npm install` in your Serverless project.
+
+`$ npm install --save-dev serverless-openapi-integration-helper`
+
+Add the plugin to your serverless.yml file
+
+```yml
+plugins:
+  - serverless-openapi-integration-helper
 ```
+
+## Basic usage
+
+Given you have following OpenApi Specification 3 (OAS3) file *oas3.yml*
+```yml
 openapi: 3.0.0
 info:
   description: User Registration
@@ -43,9 +63,9 @@ components:
 
 another file *mock.yml* containing a mock integration
 
-```
+```yml
 paths:
-  /api/v1/customer:
+  /api/v1/user:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
@@ -64,9 +84,9 @@ paths:
 
 and finally a file *production.yml* containing the production integration
 
-```
+```yml
 paths:
-  /api/v1/customer:
+  /api/v1/user:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
@@ -81,7 +101,7 @@ paths:
 
 your serverless.yml file would look like:
 
-```
+```yml
 service:
   name: user-registration
 
@@ -94,11 +114,7 @@ plugins:
   - serverless-openapi-integration-helper
 
 custom:
-  dev:
-    host: dev.example.com
-  test:
-    host: test.example.com
-  baseUrl: http://${self:custom.${opt:stage, self:provider.stage}.host}/api/xyz
+  baseUrl: http://example.comapi/xyz
 
 functions:
 
@@ -135,7 +151,7 @@ serverless integration merge --definition oas3.yml --integration production.yml 
 serverless deploy --stage=prod
 ```
 
-It is possible to merge all yml files in a directory by specifying a directory as output parameter
+It is possible to merge all yml files in a directory by specifying a directory as --integration parameter
 ```
 serverless integration merge --definition oas3.yml --integration some_directory --output api.yml
 serverless deploy --stage=prod

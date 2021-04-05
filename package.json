@@ -1,7 +1,7 @@
 {
   "name": "serverless-openapi-integration-helper",
-  "keywords": ["serverless", "aws", "oas3", "gateway"],
-  "version": "0.8.3",
+  "keywords": ["serverless", "aws", "oas3", "gateway", "openapi", "swagger"],
+  "version": "0.8.5",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,9 @@
   "engines": {
     "node": ">=10.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yndlingsfar/serverless-openapi-integration-helper"
+  }
 }
