@@ -1,18 +1,26 @@
 {
   "name": "serverless-openapi-integration-helper",
-  "keywords": ["serverless", "aws", "oas3", "gateway", "openapi", "swagger"],
-  "version": "0.8.5",
+  "keywords": [
+    "serverless",
+    "aws",
+    "oas3",
+    "gateway",
+    "openapi",
+    "swagger"
+  ],
+  "version": "0.8.8",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/unit"
   },
   "dependencies": {
     "js-yaml": "^4.0.0",
     "merge-yaml": "^1.1.0"
   },
-  "devDependencies": {},
-  "peerDependencies": {
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.2.5",
     "serverless": "2.x"
   },
   "engines": {
