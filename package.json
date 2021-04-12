@@ -8,7 +8,7 @@
     "openapi",
     "swagger"
   ],
-  "version": "0.8.8",
+  "version": "1.0.0",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "lib/index.js",
   "scripts": {
@@ -20,7 +20,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.2.5",
+    "mocha": "^2.2.5"
+  },
+  "peerDependencies": {
     "serverless": "2.x"
   },
   "engines": {

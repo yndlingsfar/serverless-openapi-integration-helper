@@ -7,23 +7,18 @@ const MergeIntegrationPlugin = require('../../lib/index');
 
 describe('#index', () => {
     let serverless;
-    let serverlessStepFunctions;
 
     context('Commands', () => {
         it("registers commands", () => {
             let plugin = new MergeIntegrationPlugin();
             expect(plugin.commands.integration.commands.merge.lifecycleEvents).to.include(
-                "readDefinition"
-            );
-            expect(plugin.commands.integration.commands.merge.lifecycleEvents).to.include(
-                "writeDefiniton"
+                "process"
             );
         });
 
         it("registers hooks", () => {
             let plugin = new MergeIntegrationPlugin();
-            expect(plugin.hooks["integration:merge:readDefinition"]).to.be.a("function");
-            expect(plugin.hooks["integration:merge:writeDefiniton"]).to.be.a("function");
+            expect(plugin.hooks["integration:merge:process"]).to.be.a("function");
         });
 
         it("should generate help for default command", () => {
@@ -41,17 +36,7 @@ describe('#index', () => {
             expect(plugin.hooks["integration:help"]()).to.be.fulfilled;
         });
 
-        it("should require the definition argument", () => {
-
-        })
-
-        it("should require the integration argument", () => {
-
-        })
-
-        it("should defaults the output argument", () => {
-
-        })
     });
+
 })
 
