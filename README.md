@@ -1,15 +1,20 @@
 # Serverless Plugin: AWS Gateway integration helper
 
-The plugin provides helper functions for a seamless AWS Gateway integration
+The plugin provides helper functions for separating the x-amazon-apigateway extensions from your OpenApi Specification file.
 
-## Separate AWS Extension Syntax from Open Api Specification
-In some cases it is needed to separate the x-amazon-apigateway extension syntax from your open api specification file. 
-A valid use-cases could be to keep your code clean or if you want to define different gateway types targets based on your environment (http_proxy and mock e.g.)
+**Currently only works with yml based openapi 3 specification files**
+
+## Use Cases
+- spin up different x-amazon-apigateway integrations based on your stage
+- separate infrastructure (aws) from openapi specification
+- use mock integrations for functional testing
 
 ## Table of contents
 
 - [Install](#install)
 - [Basic Usage](#basic-usage)
+- [Configuration Reference](#configuration-reference)
+- [Example](#example)
 
 ## Install
 
@@ -24,9 +29,28 @@ plugins:
   - serverless-openapi-integration-helper
 ```
 
+## Configuration Reference
+
+configure the plugin under the key **openApiIntegration**
+
+```yml
+openApiIntegration:
+  inputFile: schema.yml #required
+  inputDirectory: ./ #optional, defaults to ./
+  mapping: #required for at least one stage, where to read the aws integration files from (file or directory)
+    - path: schemas 
+      stage: dev
+    - path: schemas
+      stage: prod
+    - path: mocks/customer.yml
+      stage: test
+  outputFile: api.yml #optional, defaults to api.yml
+  outputDirectory: openapi-integration #optional, defaults to ./openapi-integration
+```
+
 ## Basic usage
 
-Given you have following OpenApi Specification 3 (OAS3) file *oas3.yml*
+**Given you have following OpenApi Specification 3 (OAS3) file *schema.yml***
 ```yml
 openapi: 3.0.0
 info:
@@ -61,7 +85,7 @@ components:
           example: someStrongPassword#
 ```
 
-another file *mock.yml* containing a mock integration
+**another file *mocks/customer.yml* containing a mock integration (used in functional testing)**
 
 ```yml
 paths:
@@ -82,7 +106,7 @@ paths:
 
 ```
 
-and finally a file *production.yml* containing the production integration
+**and finally a file *schemas/customer.yml* containing the production integration**
 
 ```yml
 paths:
@@ -96,10 +120,37 @@ paths:
         responses:
           "2\\d{2}":
             statusCode: "201"
-
 ```
 
-your serverless.yml file would look like:
+The integration merge command generates a combined file that can be used for spinning up aws resources
+```yml
+serverless integration merge --stage=test
+```
+
+You can reference the generated output under the resources key in your serverless file
+```yml
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        ApiKeySourceType: HEADER
+        Body: ${file(openapi-integration/api.yml)}
+        Description: "Some Description"
+        FailOnWarnings: false
+        Name: ${opt:stage, self:provider.stage}-some-name
+        EndpointConfiguration:
+          Types:
+            - REGIONAL
+    ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: ${opt:stage, self:provider.stage}
+```
+
+## Example
 
 ```yml
 service:
@@ -115,6 +166,16 @@ plugins:
 
 custom:
   baseUrl: http://example.comapi/xyz
+  
+openApiIntegration:
+  inputFile: schema.yml
+  mapping:
+    - path: schemas
+      stage: dev
+    - path: schemas
+      stage: prod
+    - path: mocks/customer.yml
+      stage: test
 
 functions:
 
@@ -124,7 +185,7 @@ resources:
       Type: AWS::ApiGateway::RestApi
       Properties:
         ApiKeySourceType: HEADER
-        Body: ${file(./api.yml)}
+        Body: ${file(openapi-integration/api.yml)}
         Description: "Some Description"
         FailOnWarnings: false
         Name: ${opt:stage, self:provider.stage}-some-name
@@ -139,21 +200,11 @@ resources:
         StageName: ${opt:stage, self:provider.stage}
 ```
 
-You are now able to run different integrations based on your environment
-
 ```
-serverless integration merge --definition oas3.yml --integration mock.yml --output api.yml
-serverless deploy --stage=test
+serverless integration merge --stage=test && serverless deploy --stage=test
 ```
 
 ```
-serverless integration merge --definition oas3.yml --integration production.yml --output api.yml
-serverless deploy --stage=prod
-```
-
-It is possible to merge all yml files in a directory by specifying a directory as --integration parameter
-```
-serverless integration merge --definition oas3.yml --integration some_directory --output api.yml
-serverless deploy --stage=prod
+serverless integration merge --stage=prod && serverless deploy --stage=prod
 ```
 
