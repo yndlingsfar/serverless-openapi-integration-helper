@@ -15,8 +15,8 @@
     "test": "mocha test/unit"
   },
   "dependencies": {
-    "js-yaml": "^4.0.0",
-    "merge-yaml": "^1.1.0",
+    "js-yaml": "^4.1.0",
+    "lodash.merge": "^4.6.2",
     "serverless": "2.x"
   },
   "devDependencies": {

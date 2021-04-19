@@ -1,6 +1,6 @@
 'use strict';
 
-const OptionsResolver = require('../../lib/OptionsResolver');
+const OptionsResolver = require('../../lib/options-resolver');
 const expect = require('chai').expect;
 
 describe('validate the configuration', () => {
@@ -253,3 +253,65 @@ describe('check integration path mappings', function () {
         expect(() => optionsResolver.resolve("dev")).to.throw(TypeError);
     });
 });
+
+describe('check cors support', function () {
+    it('should return the value for the cors option if explicitly enabled', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            cors: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').cors).to.be.equal(true);
+    });
+
+    it('should return the value for the cors option if explicitly disabled', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            cors: false,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').cors).to.be.equal(false);
+    });
+
+    it('should return the default value for the cors option if not set', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').cors).to.be.equal(false);
+    });
+});
+

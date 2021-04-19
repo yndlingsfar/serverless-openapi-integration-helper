@@ -1,0 +1,11 @@
+summary: Provide CORS
+description: Basic CORS functionality with an aws mocking integration
+responses:
+  "204":
+    description: No data
+    headers:
+      X-Some-Custom-Header:
+        style: simple
+        explode: false
+        schema:
+          type: string

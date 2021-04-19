@@ -6,18 +6,31 @@ const CLI = require('serverless/lib/classes/CLI');
 const MergeIntegrationPlugin = require('../../lib/index');
 
 describe('#index', () => {
-    let serverless;
-
     context('Commands', () => {
+        let serverless;
+        let plugin;
+
+        beforeEach(() => {
+            serverless = new Serverless();
+            serverless.service.service = 'step-functions';
+            const options = {
+                stage: 'dev',
+                region: 'eu-central-1',
+            };
+            serverless.configSchemaHandler = {
+                defineTopLevelProperty: (propertyName, propertySchema) => {},
+            };
+            serverless.cli = new CLI(serverless);
+            plugin = new MergeIntegrationPlugin(serverless, options);
+        });
+
         it("registers commands", () => {
-            let plugin = new MergeIntegrationPlugin();
             expect(plugin.commands.integration.commands.merge.lifecycleEvents).to.include(
                 "process"
             );
         });
 
         it("registers hooks", () => {
-            let plugin = new MergeIntegrationPlugin();
             expect(plugin.hooks["integration:merge:process"]).to.be.a("function");
         });
 
