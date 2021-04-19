@@ -8,7 +8,7 @@ The plugin provides helper functions for separating the x-amazon-apigateway exte
 - spin up different x-amazon-apigateway integrations based on your stage
 - separate infrastructure (aws) from openapi specification
 - use mock integrations for functional testing
-- autogenerating CORS methods and headers
+- **[NEW]:** auto-generating CORS methods, headers and api gateway mocking response
 
 ## Table of contents
 
