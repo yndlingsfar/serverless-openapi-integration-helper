@@ -1,0 +1,5 @@
+summary: Provide CORS
+description: Basic CORS functionality with an aws mocking integration
+responses:
+  "204":
+    description: No data

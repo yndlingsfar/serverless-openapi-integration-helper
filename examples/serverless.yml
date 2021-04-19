@@ -1,0 +1,53 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: myservice
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+plugins:
+  - serverless-openapi-integration-helper
+
+openApiIntegration:
+  inputFile: api.yml
+  cors: true
+  mapping:
+    - stage: dev
+      path: integrations
+    - stage: test
+      path: mocks
+
+functions:
+
+Resources:
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      ApiKeySourceType: HEADER
+      Body: ${file(openapi-integration/api.yml)}
+      Description: DCP - Public address verification Gateway (${opt:stage, self:provider.stage})
+      FailOnWarnings: false
+      Name: ${opt:stage, self:provider.stage}-dcp-public-addressVerification-gateway
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
