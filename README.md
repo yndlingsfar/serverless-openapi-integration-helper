@@ -69,8 +69,7 @@ You can customize the CORS templates by placing your own files inside a director
 | Filebame        | Description |
 | ------------- |:-------------:| 
 | headers.yml    | All headers required for CORS support |
-| integration.yml      | Contains the x-amazon-apigateway-integration block       |
-| parameters.yml | Header mappings for the x-amazon-apigateway-integration responses block       |
+| integration.yml      | Contains the x-amazon-apigateway-integration block  |
 | path.yml| OpenApi specification for the OPTIONS method       |
 
 See the EXAMPLES directory for detailed instructions.
