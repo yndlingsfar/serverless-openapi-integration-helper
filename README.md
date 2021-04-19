@@ -8,11 +8,14 @@ The plugin provides helper functions for separating the x-amazon-apigateway exte
 - spin up different x-amazon-apigateway integrations based on your stage
 - separate infrastructure (aws) from openapi specification
 - use mock integrations for functional testing
+- autogenerating CORS methods and headers
 
 ## Table of contents
 
 - [Install](#install)
+- [Configuration](#configuration)  
 - [Basic Usage](#basic-usage)
+- [CORS Generator](#cors-generator)
 - [Configuration Reference](#configuration-reference)
 - [Example](#example)
 
@@ -28,15 +31,60 @@ Add the plugin to your serverless.yml file
 plugins:
   - serverless-openapi-integration-helper
 ```
+## Configuration
+You can configure the plugin under the key **openApiIntegration**. See
+See [Configuration Reference](#configuration-reference) for a list of available options
+
+The mapping array must be used to tell the plugin where to look for files containing the **x-amazon-apigateway-integration** blocks. The mapping is done per stage.
+
+```yml
+openApiIntegration:
+    inputFile: schema.yml
+    mapping:
+      - path: schemas
+        stage: dev
+      - path: schemas
+        stage: prod
+      - path: mocks/customer.yml
+        stage: test
+```
+
+For example if in dev environment all .yml files inside the schemas directory will be processed when running 
+```
+serverless integration merge --stage=test && serverless deploy --stage=dev
+```
+
+## CORS generator
+
+The plugin can generate full CORS support out of the box. 
+```yml
+openApiIntegration:
+  cors: true
+  ...
+```
+
+If enabled, the plugin will generate all required OPTIONS methods as well as the required header informations and adds a mocking response to api gateway. 
+You can customize the CORS templates by placing your own files inside a directory called **openapi-integration/** (in the directory root). The following files can be overwritten:
+
+| Filebame        | Description |
+| ------------- |:-------------:| 
+| headers.yml    | All headers required for CORS support |
+| integration.yml      | Contains the x-amazon-apigateway-integration block       |
+| parameters.yml | Header mappings for the x-amazon-apigateway-integration responses block       |
+| path.yml| OpenApi specification for the OPTIONS method       |
+
+See the EXAMPLES directory for detailed instructions.
 
 ## Configuration Reference
 
 configure the plugin under the key **openApiIntegration**
 
+
 ```yml
 openApiIntegration:
   inputFile: schema.yml #required
   inputDirectory: ./ #optional, defaults to ./
+  cors: true #optional, defaults to false
   mapping: #required for at least one stage, where to read the aws integration files from (file or directory)
     - path: schemas 
       stage: dev
@@ -49,13 +97,13 @@ openApiIntegration:
 ```
 
 ## Basic usage
-
 **Given you have following OpenApi Specification 3 (OAS3) file *schema.yml***
 ```yml
 openapi: 3.0.0
 info:
   description: User Registration
   version: 1.0.0
+  title: UserRegistration
 paths:
   /api/v1/user:
     post:
@@ -151,7 +199,6 @@ resources:
 ```
 
 ## Example
-
 ```yml
 service:
   name: user-registration

@@ -6,9 +6,11 @@
     "oas3",
     "gateway",
     "openapi",
-    "swagger"
+    "swagger",
+    "serverless-plugin",
+    "x-amazon-apigateway-integration"
   ],
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "lib/index.js",
   "scripts": {

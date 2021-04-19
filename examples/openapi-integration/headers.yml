@@ -1,0 +1,15 @@
+Access-Control-Allow-Origin:
+  style: simple
+  explode: false
+  schema:
+    type: string
+Access-Control-Allow-Methods:
+  style: simple
+  explode: false
+  schema:
+    type: string
+Access-Control-Allow-Headers:
+  style: simple
+  explode: false
+  schema:
+    type: string
