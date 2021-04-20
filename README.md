@@ -4,14 +4,11 @@
     <img src="https://flat.badgen.net/npm/v/serverless-openapi-integration-helper?icon=npm&label=npm@latest"></a>
 <a href="https://www.npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/dt/serverless-openapi-integration-helper?icon=npm"></a>
-  <a href="https://codecov.io/gh/manwaring/serverless-openapi-integration-helper">
-    <img src="https://flat.badgen.net/codecov/c/github/manwaring/serverless-openapi-integration-helper/?icon=codecov"></a>
   <a href="https://packagephobia.now.sh/result?p=serverless-plugin-test-helper">
     <img src="https://flat.badgen.net/packagephobia/install/serverless-openapi-integration-helper"></a>
   <a href="https://www.npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/license/serverless-openapi-integration-helper"></a>
   <br/>
-
 </p>
 
 The plugin provides helper functions for separating the x-amazon-apigateway extensions from your OpenApi (former swagger) Specification file.
