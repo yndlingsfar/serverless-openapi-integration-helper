@@ -26,7 +26,14 @@ provider:
   lambdaHashingVersion: 20201221
 
 plugins:
+  - serverless-plugin-test-helper
   - serverless-openapi-integration-helper
+
+custom:
+  output:
+    handler: scripts/output.handler
+    file: stack.json
+  baseUrl: http://${env:HOST}
 
 openApiIntegration:
   inputFile: api.yml
@@ -40,14 +47,31 @@ openApiIntegration:
 functions:
 
 Resources:
-  ApiGatewayRestApi:
-    Type: AWS::ApiGateway::RestApi
-    Properties:
-      ApiKeySourceType: HEADER
-      Body: ${file(openapi-integration/api.yml)}
-      Description: DCP - Public address verification Gateway (${opt:stage, self:provider.stage})
-      FailOnWarnings: false
-      Name: ${opt:stage, self:provider.stage}-dcp-public-addressVerification-gateway
-      EndpointConfiguration:
-        Types:
-          - REGIONAL
+  Outputs:
+    GatewayUrl: # This is the key that will be used in the generated outputs file
+      Description: This is a helper for functional tests
+      Value: !Join
+        - ''
+        - - 'https://'
+          - !Ref ApiGatewayRestApi
+          - '.execute-api.'
+          - ${opt:region, self:provider.region}
+          - '.amazonaws.com/'
+          - ${opt:stage, self:provider.stage}
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        ApiKeySourceType: HEADER
+        Body: ${file(openapi-integration/api.yml)}
+        Description: User Registration (${opt:stage, self:provider.stage})
+        FailOnWarnings: false
+        Name: ${opt:stage, self:provider.stage}-gateway
+        EndpointConfiguration:
+          Types:
+            - REGIONAL
+    ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: ${opt:stage, self:provider.stage}

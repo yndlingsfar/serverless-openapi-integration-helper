@@ -4,7 +4,7 @@
 <a href="https://www.npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/dt/serverless-openapi-integration-helper?icon=npm"></a>
   <a href="https://packagephobia.now.sh/result?p=serverless-openapi-integration-helper">
-    <img src="https://flat.badgen.net/packagephobia/install/serverless-openapi-integration-helper@1.2.2"></a>
+    <img src="https://flat.badgen.net/packagephobia/install/serverless-openapi-integration-helper"></a>
   <a href="https://www.npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/license/serverless-openapi-integration-helper"></a>
   <br/>
@@ -12,7 +12,7 @@
 
 _Feedback is appreciated! If you have an idea for how this plugin/library can be improved (or even just a complaint/criticism) then please open an issue._
 
-# # Serverless Plugin: AWS Api Gateway integration helper
+# Serverless Plugin: AWS Api Gateway integration helper
 
 1. [Overview](#overview)
 1. [Installation & Setup](#installation--setup)
@@ -21,6 +21,7 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 1. [CORS Generator](#cors-generator)
 1. [Configuration Reference](#configuration-reference)
 1. [Example](#example)
+1. [Approach to a functional test of schema validation](#approach-to-a-functional-test-of-schema-validation)
 
 # Overview 
 The plugin provides the functionality to merge [OpenApiSpecification files](https://swagger.io/specification/) (formerly known as swagger) with one or multiple YML files containing the the x-amazon-apigateway extensions.
@@ -83,7 +84,7 @@ serverless integration merge --stage=test
 # Basic usage
 With an existing OpenApi Specification file you can easily setup a fully working api gateway.
 
-**First create the input file containing the [OpenApiSpecification](https://swagger.io/specification/)
+First create the input file containing the [OpenApiSpecification](https://swagger.io/specification/)
 ```yml
 # ./schema.yml
 openapi: 3.0.0
@@ -140,7 +141,7 @@ paths:
             statusCode: "201"
 ```
 
-**and finally create one or more files containing the production integration**
+**create one more file containing the production integration**
 
 ```yml
 #integrations/customer.yml
@@ -157,7 +158,7 @@ paths:
             statusCode: "201"
 ```
 
-and for example a file containing the gateway validation
+and finally e.g. a file containing the gateway schema validation
 ```yml
 #integrations/validation.yml
 x-amazon-apigateway-request-validators:
@@ -303,3 +304,115 @@ serverless integration merge --stage=test && serverless deploy --stage=test
 serverless integration merge --stage=prod && serverless deploy --stage=prod
 ```
 
+# Approach to a functional test of schema validation
+The plugin works well in combination with the [serverless-plugin-test-helper](https://www.npmjs.com/package/serverless-plugin-test-helper) to automate tests against the deployed api gateway
+
+## Install The plugin test helper package
+
+```shell
+npm install --save-dev serverless-plugin-test-helper
+```
+
+add the plugin as a plugin dependency in your serverless configuration file and configure the plugin according to the [Readme](https://www.npmjs.com/package/serverless-plugin-test-helper)
+```yml
+#./serveless.yml
+plugins:
+  - serverless-plugin-test-helper
+  - serverless-openapi-integration-helper
+
+custom:
+  output:
+    handler: scripts/output.handler
+    file: stack.json
+
+Resources:
+  Outputs:
+    GatewayUrl: # This is the key that will be used in the generated outputs file
+      Description: This is a helper for functional tests
+      Value: !Join
+        - ''
+        - - 'https://'
+          - !Ref ApiGatewayRestApi
+          - '.execute-api.'
+          - ${opt:region, self:provider.region}
+          - '.amazonaws.com/'
+          - ${opt:stage, self:provider.stage}
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        ApiKeySourceType: HEADER
+        Body: ${file(openapi-integration/api.yml)}
+        Description: User Registration (${opt:stage, self:provider.stage})
+        FailOnWarnings: false
+        Name: ${opt:stage, self:provider.stage}-gateway
+        EndpointConfiguration:
+          Types:
+            - REGIONAL
+    ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: ${opt:stage, self:provider.stage}
+```
+
+## Testing the schema validation
+Add a functional test (e.g. with jest)
+
+```javascript
+//tests/registration.js
+import {getOutput} from 'serverless-plugin-test-helper';
+import axios from 'axios';
+
+axios.defaults.adapter = require('axios/lib/adapters/http'); //Todo
+
+const URL = getOutput('GatewayUrl');
+test('request validation on registration', async () => {
+    expect.assertions(1);
+    const {status} = await axios.post(URL + '/api/v1/user',
+        {
+            "email_address": "test@example.com",
+            "password": "someStrongPassword#"
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+    expect(status).toEqual(201);
+});
+
+test('request validation on registration (invalid request)', async () => {
+    expect.assertions(1);
+    try {
+        await axios.post(URL + '/api/v1/user',
+            {
+                "email": "test@example.com"
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+    } catch (e) {
+        expect(e.response).toMatchObject({
+            statusText: 'Bad Request',
+            status: 400
+        });
+    }
+});
+```
+Then perform the functional test
+```shell
+serverless integration merge --stage=test && serverless deploy --stage test
+npm test
+serverless remove --stage test
+```
+
+The command will
+- merge the openapi specification file with the MOCK integration configured before
+- deploy to API Gateway in an isolated TEST infrastructure environment (your other environments will not be affected since we are deploying to a separated gateway)
+- perform the test and verify that schema validation is correct
+- remove all TEST resources if test succeeded
+
+See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
