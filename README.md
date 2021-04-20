@@ -65,7 +65,7 @@ openApiIntegration:
     mapping:
       - path: integrations
         stage: dev
-      - path: schemas
+      - path: integrations
         stage: prod
       - path: mocks/customer.yml
         stage: test
@@ -237,9 +237,9 @@ openApiIntegration:
   inputDirectory: ./ #optional, defaults to ./
   cors: true #optional, defaults to false
   mapping: #required for at least one stage, where to read the aws integration files from (file or directory)
-    - path: schemas 
+    - path: integrations 
       stage: dev
-    - path: schemas
+    - path: integrations
       stage: prod
     - path: mocks/customer.yml
       stage: test
@@ -268,7 +268,7 @@ openApiIntegration:
   mapping:
     - path: integrations
       stage: dev
-    - path: schemas
+    - path: integrations
       stage: prod
     - path: mocks/customer.yml
       stage: test
@@ -324,6 +324,8 @@ custom:
   output:
     handler: scripts/output.handler
     file: stack.json
+
+[...]
 
 Resources:
   Outputs:
