@@ -1,19 +1,34 @@
-# Serverless Plugin: AWS Gateway integration helper
 <p align="center">
   <a href="https://npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/v/serverless-openapi-integration-helper?icon=npm&label=npm@latest"></a>
 <a href="https://www.npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/dt/serverless-openapi-integration-helper?icon=npm"></a>
-  <a href="https://packagephobia.now.sh/result?p=serverless-plugin-test-helper">
-    <img src="https://flat.badgen.net/packagephobia/install/serverless-openapi-integration-helper"></a>
+  <a href="https://packagephobia.now.sh/result?p=serverless-openapi-integration-helper">
+    <img src="https://flat.badgen.net/packagephobia/install/serverless-openapi-integration-helper@1.2.2"></a>
   <a href="https://www.npmjs.com/package/serverless-openapi-integration-helper">
     <img src="https://flat.badgen.net/npm/license/serverless-openapi-integration-helper"></a>
   <br/>
 </p>
 
-The plugin provides helper functions for separating the x-amazon-apigateway extensions from your OpenApi (former swagger) Specification file.
+_Feedback is appreciated! If you have an idea for how this plugin/library can be improved (or even just a complaint/criticism) then please open an issue._
 
-**The plugin support YML based OpenApi3 specification files**
+# # Serverless Plugin: AWS Api Gateway integration helper
+
+1. [Overview](#overview)
+1. [Installation & Setup](#installation--setup)
+1. [Plugin configuration](#plugin-configuration)  
+1. [Basic Usage](#basic-usage)
+1. [CORS Generator](#cors-generator)
+1. [Configuration Reference](#configuration-reference)
+1. [Example](#example)
+
+# Overview 
+The plugin provides the functionality to merge [OpenApiSpecification files](https://swagger.io/specification/) (formerly known as swagger) with one or multiple YML files containing the the x-amazon-apigateway extensions.
+There are several use-cases to keep both information separated, e.g. it is needed to deploy different api gateway integrations depending on a stage environment.
+
+When dealing with functional tests you do not want to cover your production environment, but only a mocking response.
+
+**The plugin supports YML based OpenApi3 specification files only**
 
 ## Features
 - deploy stage dependent x-amazon-apigateway integrations
@@ -23,16 +38,7 @@ The plugin provides helper functions for separating the x-amazon-apigateway exte
 
 See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
 
-## Table of contents
-
-- [Install](#install)
-- [Configuration](#configuration)  
-- [Basic Usage](#basic-usage)
-- [CORS Generator](#cors-generator)
-- [Configuration Reference](#configuration-reference)
-- [Example](#example)
-
-## Install
+# Installation & Setup
 
 Run `npm install` in your Serverless project.
 
@@ -44,7 +50,7 @@ Add the plugin to your serverless.yml file
 plugins:
   - serverless-openapi-integration-helper
 ```
-## Configuration
+# Plugin configuration
 You can configure the plugin under the key **openApiIntegration**. See
 See [Configuration Reference](#configuration-reference) for a list of available options
 
@@ -74,7 +80,7 @@ To use a different x-amazon-apigateway to perform functional tests (with a mocki
 serverless integration merge --stage=test
 ```
 
-## Basic usage
+# Basic usage
 With an existing OpenApi Specification file you can easily setup a fully working api gateway.
 
 **First create the input file containing the [OpenApiSpecification](https://swagger.io/specification/)
@@ -200,7 +206,7 @@ resources:
         StageName: ${opt:stage, self:provider.stage}
 ```
 
-## CORS generator
+# CORS generator
 
 The plugin can generate full CORS support out of the box. 
 ```yml
@@ -220,7 +226,7 @@ You can customize the CORS templates by placing your own files inside a director
 
 See the EXAMPLES directory for detailed instructions.
 
-## Configuration Reference
+# Configuration Reference
 
 configure the plugin under the key **openApiIntegration**
 
@@ -240,7 +246,7 @@ openApiIntegration:
   outputDirectory: openapi-integration #optional, defaults to ./openapi-integration
 ```
 
-## Example
+# Example
 ```yml
 service:
   name: user-registration
