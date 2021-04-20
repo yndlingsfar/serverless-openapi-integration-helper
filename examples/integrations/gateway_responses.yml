@@ -1,0 +1,13 @@
+x-amazon-apigateway-gateway-responses:
+  MISSING_AUTHENTICATION_TOKEN:
+    statusCode: 404
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: |
+        {
+          "message":"$context.error.messageString",
+          "type": "$context.error.responseType",
+          "statusCode": "'404'",
+          "stage": "$context.stage"
+        }
