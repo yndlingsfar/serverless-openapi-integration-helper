@@ -10,7 +10,7 @@
     "serverless-plugin",
     "x-amazon-apigateway-integration"
   ],
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "lib/index.js",
   "scripts": {
@@ -18,12 +18,14 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
-    "lodash.merge": "^4.6.2",
-    "serverless": "2.x"
+    "lodash.merge": "^4.6.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.2.5"
+  },
+  "peerDependencies": {
+    "serverless": "2.x"
   },
   "engines": {
     "node": ">=10.0"
@@ -32,5 +34,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/yndlingsfar/serverless-openapi-integration-helper"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/yndlingsfar/serverless-openapi-integration-helper"
+  },
+  "homepage": "https://github.com/yndlingsfar/serverless-openapi-integration-helper#readme"
 }
