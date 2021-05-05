@@ -224,6 +224,7 @@ You can customize the CORS templates by placing your own files inside a director
 | headers.yml    | All headers required for CORS support |
 | integration.yml      | Contains the x-amazon-apigateway-integration block  |
 | path.yml| OpenApi specification for the OPTIONS method       |
+| response-parameters.yml| The response Parameters of the x-amazon-apigateway-integration responses      |
 
 See the EXAMPLES directory for detailed instructions.
 
