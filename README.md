@@ -256,6 +256,7 @@ configure the plugin under the key **openApiIntegration**
 ```yml
 openApiIntegration:
   inputFile: schema.yml #required
+  package: true #optionl defaults to false 
   inputDirectory: ./ #optional, defaults to ./
   cors: true #optional, defaults to false
   mapping: #required for at least one stage, where to read the aws integration files from (file or directory)
@@ -287,6 +288,7 @@ custom:
   
 openApiIntegration:
   inputFile: schema.yml
+  package: true
   mapping:
     - path: integrations
       stage: dev
@@ -303,7 +305,7 @@ resources:
       Type: AWS::ApiGateway::RestApi
       Properties:
         ApiKeySourceType: HEADER
-        Body: ${file(openapi-integration/api.yml)}
+        Body: ~
         Description: "Some Description"
         FailOnWarnings: false
         Name: ${opt:stage, self:provider.stage}-some-name
@@ -319,11 +321,11 @@ resources:
 ```
 
 ```
-serverless integration merge --stage=test && serverless deploy --stage=test
+serverless deploy --stage=test
 ```
 
 ```
-serverless integration merge --stage=prod && serverless deploy --stage=prod
+serverless deploy stage=prod
 ```
 
 # Approach to a functional test of schema validation
@@ -365,7 +367,7 @@ Resources:
       Type: AWS::ApiGateway::RestApi
       Properties:
         ApiKeySourceType: HEADER
-        Body: ${file(openapi-integration/api.yml)}
+        Body: ~
         Description: User Registration (${opt:stage, self:provider.stage})
         FailOnWarnings: false
         Name: ${opt:stage, self:provider.stage}-gateway
@@ -428,7 +430,7 @@ test('request validation on registration (invalid request)', async () => {
 ```
 Then perform the functional test
 ```shell
-serverless integration merge --stage=test && serverless deploy --stage test
+serverless deploy --stage test
 npm test
 serverless remove --stage test
 ```
