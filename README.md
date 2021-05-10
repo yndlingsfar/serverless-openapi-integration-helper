@@ -18,7 +18,7 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 1. [Installation & Setup](#installation--setup)
 1. [Plugin configuration](#plugin-configuration)  
 1. [Usage](#usage)
-1. [Command](#cors-generator)
+1. [Command](#commands)
 1. [CORS Generator](#cors-generator)
 1. [Configuration Reference](#configuration-reference)
 1. [Example](#example)
