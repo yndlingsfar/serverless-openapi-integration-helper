@@ -12,7 +12,7 @@ describe('#index', () => {
 
         beforeEach(() => {
             serverless = new Serverless();
-            serverless.service.service = 'step-functions';
+            serverless.service.service = 'serverless-openapi-integration-helper';
             const options = {
                 stage: 'dev',
                 region: 'eu-central-1',
@@ -31,7 +31,9 @@ describe('#index', () => {
         });
 
         it("registers hooks", () => {
+            expect(plugin.hooks["integration:help"]).to.be.a("function");
             expect(plugin.hooks["integration:merge:process"]).to.be.a("function");
+            expect(plugin.hooks["before:aws:package:finalize:mergeCustomProviderResources"]).to.be.a("function");
         });
 
         it("should generate help for default command", () => {
