@@ -44,7 +44,7 @@ describe('checking the package status', () => {
         expect(optionsResolver.resolve().package).to.be.true;
     })
 
-    it('should resolve to true if no configuration provided', () => {
+    it('should resolve to false if no configuration provided', () => {
         let optionsResolver = new OptionsResolver({
             inputFile: 'some_input.yml',
             outputFile: 'some_output.yml',
@@ -55,7 +55,7 @@ describe('checking the package status', () => {
                 }
             ]
         });
-        expect(optionsResolver.resolve().package).to.be.true;
+        expect(optionsResolver.resolve().package).to.be.false;
     })
 });
 

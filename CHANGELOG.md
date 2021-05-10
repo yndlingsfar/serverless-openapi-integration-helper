@@ -1,3 +1,7 @@
+## 1.4.0 (2021-05-10)
+- add lifecycle hook to execute plugin on package & deploy
+- autogenerate resources.Resources.ApiGatewayRestApi.Properties.Body variable
+
 ## 1.3.0 (2021-05-05)
 - additional template and auto-generation for responseParameters if cors support enabled
 
