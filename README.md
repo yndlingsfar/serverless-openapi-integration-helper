@@ -325,7 +325,7 @@ serverless deploy --stage=test
 ```
 
 ```
-serverless deploy stage=prod
+serverless deploy --stage=prod
 ```
 
 # Approach to a functional test of schema validation
@@ -430,9 +430,9 @@ test('request validation on registration (invalid request)', async () => {
 ```
 Then perform the functional test
 ```shell
-serverless deploy --stage test
+serverless deploy --stage=test
 npm test
-serverless remove --stage test
+serverless remove --stage=test
 ```
 
 The command will
