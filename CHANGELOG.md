@@ -1,3 +1,18 @@
+## 1.4.5 (2021-05-10)
+- Bugfix: Changed Lifecycle Event
+
+## 1.4.4 (2021-05-10)
+- Updated Readme
+
+## 1.4.3 (2021-05-10)
+- Updated Readme
+
+## 1.4.2 (2021-05-10)
+- Updated Readme
+
+## 1.4.1 (2021-05-10)
+- Bugfix: Changed Lifecycle Event
+
 ## 1.4.0 (2021-05-10)
 - add lifecycle hook to execute plugin on package & deploy
 - autogenerate resources.Resources.ApiGatewayRestApi.Properties.Body variable
