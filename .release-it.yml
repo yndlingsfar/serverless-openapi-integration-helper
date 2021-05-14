@@ -1,0 +1,6 @@
+git:
+  requireBranch: main
+  tagAnnotation: "${version}"
+  requireCleanWorkingDir: true
+npm:
+  publish: true

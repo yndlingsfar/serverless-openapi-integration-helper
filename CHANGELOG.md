@@ -1,3 +1,9 @@
+## 1.4.7 (2021-05-14)
+- Corrected Example
+
+## 1.4.6 (2021-05-13)
+- Updated Readme
+
 ## 1.4.5 (2021-05-10)
 - Bugfix: Changed Lifecycle Event
 

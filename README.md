@@ -21,6 +21,9 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 1. [Command](#commands)
 1. [CORS Generator](#cors-generator)
 1. [Configuration Reference](#configuration-reference)
+1. [Known Issues](#known-issues)
+   1. [Stage Deployment](#stage-deployment)
+   1. [Variable Resolving](#variable-resolving)
 1. [Example](#example)
 1. [Approach to a functional test of schema validation](#approach-to-a-functional-test-of-schema-validation)
 
@@ -154,7 +157,7 @@ paths:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: ${self:custom.url}
+        uri: https://www.example.com/users
         type: "http"
         passthroughBehavior: "when_no_match"
         responses:
@@ -175,11 +178,11 @@ x-amazon-apigateway-request-validators:
 x-amazon-apigateway-request-validator: all
 ```
 
-Now you can easily create a combined amazon gateway compatible openapi specification file that can be referenced in your serverless resources
+Now you can easily create a combined amazon gateway compatible openapi specification file that is automatically injected in your serverless resources
 
 ```shell
 #Create OpenApi File containing mocking responses (usable in functional tests) and deploy to ApiGateway
-serverless deploy stage==test
+serverless deploy --stage==test
 ```
 
 ```shell
@@ -270,6 +273,21 @@ openApiIntegration:
   outputDirectory: openapi-integration #optional, defaults to ./openapi-integration
 ```
 
+# Known Issues
+
+## Stage deployment
+When using serverless framework only to deploy your aws resources **without having any lambda functions or triggers**, the AWS Gateway deploymemt does not behave as expected.
+Any deployment to an existing stage will be ignored, since CloudFormation does not redeploy a stage if the DeploymentIdentifier has not changed.
+
+The plugin [serverless-random-gateway-deployment-id](https://www.npmjs.com/package/serverless-random-gateway-deployment-id) solves this problem by adding a random id to the deployment-name and all references to it on every deploy
+
+See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
+
+## Variable Resolving
+Serverless variables inside the openapi integration files are not resolved correctly when using the package & deploy hooks. This problem can be solved by using the api gateway STAGE VARIABLES.
+
+See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
+
 # Example
 ```yml
 service:
@@ -282,9 +300,6 @@ provider:
 
 plugins:
   - serverless-openapi-integration-helper
-
-custom:
-  baseUrl: http://example.comapi/xyz
   
 openApiIntegration:
   inputFile: schema.yml
@@ -351,18 +366,20 @@ custom:
 
 [...]
 
-Resources:
-  Outputs:
-    GatewayUrl: # This is the key that will be used in the generated outputs file
-      Description: This is a helper for functional tests
-      Value: !Join
-        - ''
-        - - 'https://'
-          - !Ref ApiGatewayRestApi
-          - '.execute-api.'
-          - ${opt:region, self:provider.region}
-          - '.amazonaws.com/'
-          - ${opt:stage, self:provider.stage}
+resources:
+   Outputs:
+      GatewayUrl: # This is the key that will be used in the generated outputs file
+         Description: This is a helper for functional tests
+         Value: !Join
+            - ''
+            - - 'https://'
+              - !Ref ApiGatewayRestApi
+              - '.execute-api.'
+              - ${opt:region, self:provider.region}
+              - '.amazonaws.com/'
+              - ${opt:stage, self:provider.stage}
+
+   Resources:
     ApiGatewayRestApi:
       Type: AWS::ApiGateway::RestApi
       Properties:

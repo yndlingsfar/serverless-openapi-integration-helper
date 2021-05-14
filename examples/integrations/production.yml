@@ -3,7 +3,7 @@ paths:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: ${self:custom.url}
+        uri: https://${stageVariables.BaseUrl}/users
         type: "http"
         passthroughBehavior: "when_no_match"
         responses:
