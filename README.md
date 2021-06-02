@@ -20,6 +20,7 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 1. [Usage](#usage)
 1. [Command](#commands)
 1. [CORS Generator](#cors-generator)
+1. [AUTO-MOCK Generator](#auto-mock-generator) 
 1. [Configuration Reference](#configuration-reference)
 1. [Known Issues](#known-issues)
    1. [Stage Deployment](#stage-deployment)
@@ -39,9 +40,10 @@ When dealing with functional tests you do not want to cover your production envi
 - deploy stage dependent x-amazon-apigateway integrations
 - separate infrastructure (aws) from openapi specification
 - use mock integrations for functional testing
-- **[NEW]:** auto-generating CORS methods, headers and api gateway mocking response
-- **[NEW]:** hook into package & deploy lifeCycle and generate combined openApi files on the fly during deployment
-- **[NEW]:** auto-inject generated openApi file into the Body property of specified API Gateway
+- auto-generating CORS methods, headers and api gateway mocking response
+- hook into package & deploy lifeCycle and generate combined openApi files on the fly during deployment
+- auto-inject generated openApi file into the Body property of specified API Gateway
+- **[NEW]:** generate mocking responses without specifying x-amazon-apigateway-integration blocks
 
 See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
 
@@ -252,6 +254,15 @@ You can customize the CORS templates by placing your own files inside a director
 
 See the EXAMPLES directory for detailed instructions.
 
+# Auto Mock Generator
+If enabled, the plugin generates mocking responses for all methods that do not have an x-amazon-apigateway-integration block defined.
+It takes the first 2xx response defined in the openApi specification and generates a simple mocking response on the fly
+```yml
+openApiIntegration:
+  autoMock: true
+  ...
+```
+
 # Configuration Reference
 
 configure the plugin under the key **openApiIntegration**
@@ -262,6 +273,7 @@ openApiIntegration:
   package: true #optionl defaults to false 
   inputDirectory: ./ #optional, defaults to ./
   cors: true #optional, defaults to false
+  autoMock: true #optional, defaults to false
   mapping: #required for at least one stage, where to read the aws integration files from (file or directory)
     - path: integrations 
       stage: dev
@@ -358,11 +370,6 @@ add the plugin as a plugin dependency in your serverless configuration file and 
 plugins:
   - serverless-plugin-test-helper
   - serverless-openapi-integration-helper
-
-custom:
-  output:
-    handler: scripts/output.handler
-    file: stack.json
 
 [...]
 

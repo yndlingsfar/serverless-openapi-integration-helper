@@ -315,3 +315,63 @@ describe('check cors support', function () {
     });
 });
 
+describe('check autoMock support', function () {
+    it('should return the value for the autoMock option if explicitly enabled', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            autoMock: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').autoMock).to.be.equal(true);
+    });
+
+    it('should return the value for the autoMock option if explicitly disabled', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            autoMock: false,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').autoMock).to.be.equal(false);
+    });
+
+    it('should return the default value for the autoMock option if not set', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').autoMock).to.be.equal(false);
+    });
+});
