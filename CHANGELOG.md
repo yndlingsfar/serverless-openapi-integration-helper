@@ -1,3 +1,6 @@
+## 1.6.1 (2021-06-04)
+- Fixed HTTP-Status-Code in AutoMock
+
 ## 1.6.0 (2021-06-04)
 - Added auto-validation support
 - Integration mapping: stages now support arrays
