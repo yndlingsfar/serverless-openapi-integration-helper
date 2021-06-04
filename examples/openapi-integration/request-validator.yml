@@ -1,8 +1,5 @@
 x-amazon-apigateway-request-validators:
   all:
     validateRequestBody: true
-    validateRequestParameters: true
-  disabled:
-    validateRequestBody: false
     validateRequestParameters: false
 x-amazon-apigateway-request-validator: all

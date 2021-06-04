@@ -1,3 +1,23 @@
+## 1.6.0 (2021-06-04)
+- Added auto-validation support
+- Integration mapping: stages now support arrays
+- Integration mapping: stages without integration mapping are allowed if autoMock is enabled
+
+## 1.5.3 (2021-06-02)
+- Updated Readme
+
+## 1.5.2 (2021-06-02)
+- Updated Readme
+
+## 1.5.1 (2021-06-02)
+- Updated Readme
+
+## 1.5.1 (2021-06-02)
+- Bugfix: broken automocking support
+
+## 1.5.0 (2021-06-02)
+- Added automocking support
+
 ## 1.4.7 (2021-05-14)
 - Corrected Example
 

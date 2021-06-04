@@ -3,9 +3,18 @@ paths:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: https://${stageVariables.BaseUrl}/users
+        uri: https://${stageVariables.BaseUrl}
         type: "http"
         passthroughBehavior: "when_no_match"
         responses:
           "2\\d{2}":
             statusCode: "201"
+    get:
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: https://${stageVariables.BaseUrl}
+        type: "http"
+        passthroughBehavior: "when_no_match"
+        responses:
+          "2\\d{2}":
+            statusCode: "200"

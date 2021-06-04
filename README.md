@@ -20,7 +20,8 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 1. [Usage](#usage)
 1. [Command](#commands)
 1. [CORS Generator](#cors-generator)
-1. [AUTO-MOCK Generator](#auto-mock-generator) 
+1. [AUTO-MOCK Generator](#auto-mock-generator)
+1. [VALIDATION Generator](#validation-generator)
 1. [Configuration Reference](#configuration-reference)
 1. [Known Issues](#known-issues)
    1. [Stage Deployment](#stage-deployment)
@@ -44,6 +45,7 @@ When dealing with functional tests you do not want to cover your production envi
 - hook into package & deploy lifeCycle and generate combined openApi files on the fly during deployment
 - auto-inject generated openApi file into the Body property of specified API Gateway
 - **[NEW]:** generate mocking responses without specifying x-amazon-apigateway-integration blocks
+- **[NEW]:** generate request-validation blocks
 
 See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
 
@@ -63,21 +65,17 @@ plugins:
 You can configure the plugin under the key **openApiIntegration**. See
 See [Configuration Reference](#configuration-reference) for a list of available options
 
-The mapping array must be used to configure where the files containing the **x-amazon-apigateway-integration** blocks are located. 
-
-**Each available stage needs its own mapping entry**
+The mapping array must be used to configure where the files containing the **x-amazon-apigateway-integration** blocks are located.
 
 ```yml
 openApiIntegration:
     package: true #New feature! Hook into the package & deploy process
     inputFile: schema.yml
     mapping:
-      - path: integrations
-        stage: dev
-      - path: integrations
-        stage: prod
-      - path: mocks/customer.yml
-        stage: test
+       - stage: [dev, prod] #multiple stages
+         path: integrations
+       - stage: test #single stage
+         path: mocks/customer.yml
 ```
 
 In the above example all YML files inside the schemas directory will be processed if deploying the dev stage
@@ -167,19 +165,6 @@ paths:
             statusCode: "201"
 ```
 
-and finally e.g. a file containing the gateway schema validation
-```yml
-#integrations/validation.yml
-x-amazon-apigateway-request-validators:
-  all:
-    validateRequestBody: true
-    validateRequestParameters: true
-  disabled:
-    validateRequestBody: false
-    validateRequestParameters: false
-x-amazon-apigateway-request-validator: all
-```
-
 Now you can easily create a combined amazon gateway compatible openapi specification file that is automatically injected in your serverless resources
 
 ```shell
@@ -252,7 +237,7 @@ You can customize the CORS templates by placing your own files inside a director
 | path.yml| OpenApi specification for the OPTIONS method       |
 | response-parameters.yml| The response Parameters of the x-amazon-apigateway-integration responses      |
 
-See the EXAMPLES directory for detailed instructions.
+See the [EXAMPLES](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples) directory for detailed instructions.
 
 # Auto Mock Generator
 If enabled, the plugin generates mocking responses for all methods that do not have an x-amazon-apigateway-integration block defined.
@@ -262,6 +247,33 @@ openApiIntegration:
   autoMock: true
   ...
 ```
+
+When using the autoMock feature, you do not need to specify inputPath mappings, since all endpoints are mocked automatically
+
+```yml
+openApiIntegration:
+    package: true
+    inputFile: schema.yml
+    mapping: ~
+```
+
+# VALIDATION generator
+
+The plugin can generate full CORS support out of the box.
+```yml
+openApiIntegration:
+  validation: true
+  ...
+```
+
+If enabled, the plugin generates the x-amazon-apigateway-request-validators blocks and adds a basic request validation to all methods.
+You can customize the VALIDATION template by placing your own files inside a directory **openapi-integration** (in your project root). The following files can be overwritten:
+
+| Filename        | Description |
+| ------------- |:-------------:| 
+| request-validator.yml    | The x-amazon-apigateway-request-validators block |
+
+See the [EXAMPLES](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples) directory for detailed instructions.
 
 # Configuration Reference
 
@@ -274,13 +286,12 @@ openApiIntegration:
   inputDirectory: ./ #optional, defaults to ./
   cors: true #optional, defaults to false
   autoMock: true #optional, defaults to false
-  mapping: #required for at least one stage, where to read the aws integration files from (file or directory)
-    - path: integrations 
-      stage: dev
-    - path: integrations
-      stage: prod
-    - path: mocks/customer.yml
-      stage: test
+  validation: true #optional, defaults to false
+  mapping: #optional, can be completely blank if autoMock option is enabled
+    - stage: [dev, prod] #multiple stages
+      path: integrations 
+    - stage: test #single stage
+      path: mocks/customer.yml
   outputFile: api.yml #optional, defaults to api.yml
   outputDirectory: openapi-integration #optional, defaults to ./openapi-integration
 ```
@@ -318,9 +329,7 @@ openApiIntegration:
   package: true
   mapping:
     - path: integrations
-      stage: dev
-    - path: integrations
-      stage: prod
+      stage: [dev, prod]
     - path: mocks/customer.yml
       stage: test
 

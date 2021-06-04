@@ -238,7 +238,26 @@ describe('check integration path mappings', function () {
         expect(optionsResolver.resolve().integrationPath).to.be.equal('some_path/');
     });
 
-    it('should throw an exception if stage does not match', () => {
+    it('should return resolve path mapping with multiple stages per path', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: ["dev", "prod"],
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve().integrationPath).to.be.equal('some_path/');
+    });
+
+    it('should throw an exception if stage does not match (with disabled auto-mock option)', () => {
         let optionsResolver = new OptionsResolver({
             package: true,
             inputFile: 'some_input.yml',
@@ -251,6 +270,18 @@ describe('check integration path mappings', function () {
             ]
         });
         expect(() => optionsResolver.resolve("dev")).to.throw(TypeError);
+    });
+
+    it('should do nothing if stage does not match (with enabled auto-mock option)', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            autoMock: true,
+            mapping: []
+        });
+
+        expect(optionsResolver.resolve().integrationPath).to.be.null;
     });
 });
 
@@ -373,5 +404,66 @@ describe('check autoMock support', function () {
             ]
         });
         expect(optionsResolver.resolve('test').autoMock).to.be.equal(false);
+    });
+});
+
+describe('check validation support', function () {
+    it('should return the value for the validation option if explicitly enabled', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            validation: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').validation).to.be.equal(true);
+    });
+
+    it('should return the value for the validation option if explicitly disabled', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            validation: false,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').validation).to.be.equal(false);
+    });
+
+    it('should return the default value for the validation option if not set', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/"
+                },
+                {
+                    stage: "test",
+                    path: "some_other_path/"
+                }
+            ]
+        });
+        expect(optionsResolver.resolve('test').validation).to.be.equal(false);
     });
 });
