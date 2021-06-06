@@ -11,7 +11,7 @@ paths:
             statusCode: "201"
     get:
       x-amazon-apigateway-integration:
-        httpMethod: "POST"
+        httpMethod: "GET"
         uri: https://${stageVariables.BaseUrl}
         type: "http"
         passthroughBehavior: "when_no_match"

@@ -15,38 +15,6 @@ paths:
       responses:
         '201':
           description: user created
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-      x-amazon-apigateway-integration:
-        httpMethod: POST
-        type: mock
-        passthroughBehavior: when_no_match
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 201
-            }
-        responses:
-          2\d{2}:
-            statusCode: '201'
-            responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
-              method.response.header.Access-Control-Allow-Methods: '''*'''
-              method.response.header.Access-Control-Allow-Origin: '''*'''
     get:
       summary: get a user
       responses:
@@ -56,81 +24,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-      x-amazon-apigateway-integration:
-        httpMethod: POST
-        type: mock
-        passthroughBehavior: when_no_match
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 200
-            }
-        responses:
-          2\d{2}:
-            statusCode: '200'
-            responseTemplates:
-              application/json: |
-                {
-                  id: 1
-                  username: john@doe.com
-                  password: #someRandomPassword
-                }
-            responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
-              method.response.header.Access-Control-Allow-Methods: '''*'''
-              method.response.header.Access-Control-Allow-Origin: '''*'''
-    options:
-      summary: Provide CORS
-      description: Basic CORS functionality with an aws mocking integration
-      responses:
-        '204':
-          description: No data
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-      x-amazon-apigateway-integration:
-        type: mock
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 204
-            }
-        responses:
-          default:
-            statusCode: '204'
-            responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
-              method.response.header.Access-Control-Allow-Methods: '''*'''
-              method.response.header.Access-Control-Allow-Origin: '''*'''
   /api/v1/user/{email}:
     post:
       summary: provide a password reset token
@@ -146,86 +39,6 @@ paths:
       responses:
         '201':
           description: user created
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-      x-amazon-apigateway-integration:
-        type: mock
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 201
-            }
-        responses:
-          '201':
-            statusCode: '201'
-            responseTemplates:
-              application/json: |
-                {
-                  AUTO-MOCK by openapi-integration-plugin. HTTP-StatusCode: 201
-                }
-            responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
-              method.response.header.Access-Control-Allow-Methods: '''*'''
-              method.response.header.Access-Control-Allow-Origin: '''*'''
-    options:
-      summary: Provide CORS
-      description: Basic CORS functionality with an aws mocking integration
-      responses:
-        '204':
-          description: No data
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-      parameters:
-        - name: email
-          in: path
-          description: Email address of the user account to provide the reset token
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-      x-amazon-apigateway-integration:
-        type: mock
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 204
-            }
-        responses:
-          default:
-            statusCode: '204'
-            responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
-              method.response.header.Access-Control-Allow-Methods: '''*'''
-              method.response.header.Access-Control-Allow-Origin: '''*'''
 components:
   schemas:
     Customer:
@@ -241,8 +54,3 @@ components:
           type: string
           format: password
           example: someStrongPassword#
-x-amazon-apigateway-request-validators:
-  all:
-    validateRequestBody: true
-    validateRequestParameters: true
-x-amazon-apigateway-request-validator: all
