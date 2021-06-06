@@ -1,0 +1,7 @@
+x-amazon-apigateway-integration:
+  httpMethod: "HTTP_METHOD"
+  uri: https://www.example.com
+  type: "http"
+  passthroughBehavior: "when_no_match"
+  responses:
+    #GENERIEREN
