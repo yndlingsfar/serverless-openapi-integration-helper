@@ -12,7 +12,7 @@ paths:
     get:
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: https://${stageVariables.BaseUrl}
+        uri: https://${stageVariables.BaseUrl}ste
         type: "http"
         passthroughBehavior: "when_no_match"
         responses:
