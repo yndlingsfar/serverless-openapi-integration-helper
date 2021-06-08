@@ -1,3 +1,6 @@
+## 1.7.0 (2021-06-08)
+- Added automatic generation if integration files
+
 ## 1.6.1 (2021-06-04)
 - Fixed HTTP-Status-Code in AutoMock
 

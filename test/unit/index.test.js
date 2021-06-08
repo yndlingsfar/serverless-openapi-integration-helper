@@ -28,11 +28,15 @@ describe('#index', () => {
             expect(plugin.commands.integration.commands.merge.lifecycleEvents).to.include(
                 "process"
             );
+            expect(plugin.commands.integration.commands.create.lifecycleEvents).to.include(
+                "files"
+            );
         });
 
         it("registers hooks", () => {
             expect(plugin.hooks["integration:help"]).to.be.a("function");
             expect(plugin.hooks["integration:merge:process"]).to.be.a("function");
+            expect(plugin.hooks["integration:create:files"]).to.be.a("function");
             expect(plugin.hooks["before:aws:package:finalize:mergeCustomProviderResources"]).to.be.a("function");
         });
 

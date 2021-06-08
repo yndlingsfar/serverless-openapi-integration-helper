@@ -14,7 +14,7 @@
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha test/unit"
+    "test": "mocha \"test/**/*.test.js\""
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

@@ -3,7 +3,7 @@ paths:
     post:
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: https://${stageVariables.BaseUrl}
+        uri: https://${stageVariables.BaseUrl}/user
         type: "http"
         passthroughBehavior: "when_no_match"
         responses:
@@ -12,7 +12,7 @@ paths:
     get:
       x-amazon-apigateway-integration:
         httpMethod: "GET"
-        uri: https://${stageVariables.BaseUrl}
+        uri: https://${stageVariables.BaseUrl}/user
         type: "http"
         passthroughBehavior: "when_no_match"
         responses:

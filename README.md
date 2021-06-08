@@ -33,7 +33,7 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 The plugin provides the functionality to merge [OpenApiSpecification files](https://swagger.io/specification/) (formerly known as swagger) with one or multiple YML files containing the the x-amazon-apigateway extensions.
 There are several use-cases to keep both information separated, e.g. it is needed to deploy different api gateway integrations depending on a stage environment.
 
-When dealing with functional tests you do not want to cover your production environment, but only a mocking response.
+When dealing with functional tests you do not want to test the production environment, but only a mocking response.
 
 **The plugin supports YML based OpenApi3 specification files only**
 
@@ -44,8 +44,9 @@ When dealing with functional tests you do not want to cover your production envi
 - auto-generating CORS methods, headers and api gateway mocking response
 - hook into package & deploy lifeCycle and generate combined openApi files on the fly during deployment
 - auto-inject generated openApi file into the Body property of specified API Gateway
-- **[NEW]:** generate mocking responses without specifying x-amazon-apigateway-integration blocks
+- **[NEW]:** generate mocking responses without specifying x-amazon-apigateway-integration objects
 - **[NEW]:** generate request-validation blocks
+- **[NEW]:** generate all required x-amazon-apigateway-integration objects automatically
 
 See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
 
@@ -75,7 +76,7 @@ openApiIntegration:
        - stage: [dev, prod] #multiple stages
          path: integrations
        - stage: test #single stage
-         path: mocks/customer.yml
+         path: mocks
 ```
 
 In the above example all YML files inside the schemas directory will be processed if deploying the dev stage
@@ -128,44 +129,25 @@ components:
           example: someStrongPassword#
 ```
 
-Then create a file containing a **gateway mock integration**
-```yml
-# mocks/customer.yml
-paths:
-  /api/v1/user:
-    post:
-      x-amazon-apigateway-integration:
-        httpMethod: "POST"
-        type: "mock"
-        passthroughBehavior: "when_no_match"
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 204
-            }
-        responses:
-          "2\\d{2}":
-            statusCode: "201"
-```
-
-**create one more file containing the production integration**
+The plugin will generate the **x-amazon-apigateway integrations** objects for all methods that do not have an integration.
 
 ```yml
-#integrations/customer.yml
-paths:
-  /api/v1/user:
-    post:
-      x-amazon-apigateway-integration:
-        httpMethod: "POST"
-        uri: https://www.example.com/users
-        type: "http"
-        passthroughBehavior: "when_no_match"
-        responses:
-          "2\\d{2}":
-            statusCode: "201"
+#generate a file containing a gateway mock integration in the directory /mocks
+serverless integration create --output mocks --type mock --stage=test
+
+#generate a file containing the production integration in the directory integrations/
+serverless integration create --output integrations --type http --stage=prod
 ```
 
-Now you can easily create a combined amazon gateway compatible openapi specification file that is automatically injected in your serverless resources
+Supported types are
+- http_proxy
+- http
+- aws
+- aws_proxy
+- mock
+
+
+The plugin now generates a merged file during deployment that is automatically injected in your serverless resources
 
 ```shell
 #Create OpenApi File containing mocking responses (usable in functional tests) and deploy to ApiGateway
@@ -202,6 +184,7 @@ resources:
 
 # Commands
 
+## Manual merge
 The generate command can be used independently with
 ```yml
 serverless integration merge --stage=dev
