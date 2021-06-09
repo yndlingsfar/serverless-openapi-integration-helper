@@ -26,7 +26,7 @@ describe('ParameterBuilder', () => {
             explode: false,
             schema: {type: 'string'}
         }]);
-        expect(parameterMappings).to.have.property('integration.request.query.email').with.equal("method.request.query.email");
+        expect(parameterMappings).to.have.property('integration.request.querystring.email').with.equal("method.request.querystring.email");
     })
     it('should map header parameters', () => {
         let parameterMappings = paramBuilder.build([{
@@ -64,6 +64,23 @@ describe('ParameterBuilder', () => {
             ]
         );
         expect(parameterMappings).to.have.property('integration.request.path.email').with.equal("method.request.path.email");
-        expect(parameterMappings).to.have.property('integration.request.query.name').with.equal("method.request.query.name");
+        expect(parameterMappings).to.have.property('integration.request.querystring.name').with.equal("method.request.querystring.name");
+    })
+
+    it('should ignore cookie parameter', () => {
+        let parameterMappings = paramBuilder.build(
+            [
+                {
+                    name: 'token',
+                    in: 'cookie',
+                    description: 'some_description',
+                    required: true,
+                    style: 'simple',
+                    explode: false,
+                    schema: {type: 'string'}
+                }
+            ]
+        );
+        expect(parameterMappings).to.not.have.property('integration.request.cookie.token');
     })
 });

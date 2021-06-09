@@ -1,3 +1,6 @@
+## 1.7.2(2021-06-09)
+- Fixed requestParam mapping
+
 ## 1.7.1 (2021-06-09)
 - Testing hidden BETA feature -proxyManager-
 

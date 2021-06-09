@@ -61,7 +61,7 @@ describe('HTTP_PROXY Generator', () => {
         expect(integration['x-amazon-apigateway-integration']).to.have.property('passthroughBehavior').equal('when_no_match');
         expect(integration['x-amazon-apigateway-integration'].responses).to.have.property('200');
         expect(integration['x-amazon-apigateway-integration'].responses['200']).to.not.have.property('headers');
-        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.query.email');
+        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.querystring.email');
     })
 });
 
@@ -123,7 +123,7 @@ describe('HTTP Generator', () => {
         expect(integration['x-amazon-apigateway-integration']).to.have.property('passthroughBehavior').equal('when_no_match');
         expect(integration['x-amazon-apigateway-integration'].responses).to.have.property('200');
         expect(integration['x-amazon-apigateway-integration'].responses['200']).to.have.property('headers');
-        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.query.email');
+        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.querystring.email');
     })
 });
 
@@ -185,7 +185,7 @@ describe('AWS_PROXY Generator', () => {
         expect(integration['x-amazon-apigateway-integration']).to.have.property('passthroughBehavior').equal('when_no_match');
         expect(integration['x-amazon-apigateway-integration'].responses).to.have.property('200');
         expect(integration['x-amazon-apigateway-integration'].responses['200']).to.not.have.property('headers');
-        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.query.email');
+        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.querystring.email');
     })
 });
 
@@ -247,7 +247,7 @@ describe('AWS Generator', () => {
         expect(integration['x-amazon-apigateway-integration']).to.have.property('passthroughBehavior').equal('when_no_match');
         expect(integration['x-amazon-apigateway-integration'].responses).to.have.property('200');
         expect(integration['x-amazon-apigateway-integration'].responses['200']).to.have.property('headers');
-        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.query.email');
+        expect(integration['x-amazon-apigateway-integration'].requestParameters).to.have.property('integration.request.querystring.email');
     })
 });
 
