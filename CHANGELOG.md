@@ -1,3 +1,6 @@
+## 1.7.1 (2021-06-09)
+- Testing hidden BETA feature -proxyManager-
+
 ## 1.7.0 (2021-06-08)
 - Added automatic generation if integration files
 

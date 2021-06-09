@@ -79,19 +79,18 @@ openApiIntegration:
          path: mocks
 ```
 
-In the above example all YML files inside the schemas directory will be processed if deploying the dev stage
+In the above example all YML files inside the _integrations_ directory will be processed and merged with the schema.yml file when deploying the dev stage
 ```shell
 serverless deploy --stage=dev
 ```
 
-To use a different x-amazon-apigateway to perform functional tests (with a mocking response) the file mock/customer.yml is processed if deploying the test stage
+To use a different x-amazon-apigateway to perform functional tests (with mocking responses e.g) the directory mock is processed and merged with the schema.yml file when deploying the test stage
 ```shell
 serverless deploy --stage=test
 ```
 
 # Usage
-With an existing OpenApi Specification file you can easily setup a fully working api gateway.
-
+You can setup a fully working API GATEWAY with any openApi 3.0 specification file
 First create the input file containing the [OpenApiSpecification](https://swagger.io/specification/)
 ```yml
 # ./schema.yml
@@ -242,7 +241,7 @@ openApiIntegration:
 
 # VALIDATION generator
 
-The plugin can generate full CORS support out of the box.
+The plugin supports full request validation out of the box
 ```yml
 openApiIntegration:
   validation: true
