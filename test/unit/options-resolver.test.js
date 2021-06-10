@@ -467,3 +467,52 @@ describe('check validation support', function () {
         expect(optionsResolver.resolve('test').validation).to.be.equal(false);
     });
 });
+
+describe('check proxyManager support', function () {
+    it('should return the proxy manager configuration for a single stage', () => {
+            let optionsResolver = new OptionsResolver({
+                package: true,
+                validation: true,
+                inputFile: 'some_input.yml',
+                outputFile: 'some_output.yml',
+                mapping: [
+                    {
+                        stage: "dev",
+                        path: "some_path/",
+                        proxyManager: {
+                            type: 'http_proxy',
+                            baseUrl: 'https://www.example.com',
+                            pattern: 'somePattern'
+                        }
+                    }
+                ]
+            });
+
+            expect(optionsResolver.resolve('dev').proxy).to.have.property('type').equal('http_proxy');
+            expect(optionsResolver.resolve('dev').proxy).to.have.property('baseUrl').equal('https://www.example.com');
+            expect(optionsResolver.resolve('dev').proxy).to.have.property('pattern').equal('somePattern');
+    });
+
+    it('should throw error for unsupported type', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            validation: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            mapping: [
+                {
+                    stage: "dev",
+                    path: "some_path/",
+                    proxyManager: {
+                        type: 'aws_proxy',
+                        baseUrl: 'https://www.example.com',
+                        pattern: 'somePattern'
+                    }
+                }
+            ]
+        });
+
+        expect(() => optionsResolver.resolve("dev")).to.throw(TypeError);
+    });
+
+});
