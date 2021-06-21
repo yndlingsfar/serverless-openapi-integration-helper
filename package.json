@@ -10,7 +10,7 @@
     "serverless-plugin",
     "x-amazon-apigateway-integration"
   ],
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "Serverless plugin for integrating aws gateway syntax into open api specification",
   "main": "lib/index.js",
   "scripts": {
