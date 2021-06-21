@@ -515,4 +515,27 @@ describe('check proxyManager support', function () {
         expect(() => optionsResolver.resolve("dev")).to.throw(TypeError);
     });
 
+    it('should not throw error if stage has no proxy manager defined', () => {
+        let optionsResolver = new OptionsResolver({
+            package: true,
+            validation: true,
+            inputFile: 'some_input.yml',
+            outputFile: 'some_output.yml',
+            autoMock: true,
+            mapping: [
+                {
+                    stage: ["dev", "prod"],
+                    path: "some_path/",
+                    proxyManager: {
+                        type: 'aws_proxy',
+                        baseUrl: 'https://www.example.com',
+                        pattern: 'somePattern'
+                    }
+                }
+            ]
+        });
+
+        expect(() => optionsResolver.resolve("test")).to.not.throw(TypeError);
+    });
+
 });

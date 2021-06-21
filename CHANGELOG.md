@@ -1,3 +1,6 @@
+## 1.7.4(2021-06-09)
+- Bugfix -proxyManager-
+
 ## 1.7.3(2021-06-09)
 - Testing hidden BETA feature -proxyManager-
 
