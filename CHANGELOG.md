@@ -1,3 +1,6 @@
+## 1.8.0 (2021-07-05)
+- Releasing Proxy Manager
+
 ## 1.7.4(2021-06-09)
 - Bugfix -proxyManager-
 

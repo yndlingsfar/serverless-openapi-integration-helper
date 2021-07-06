@@ -22,6 +22,7 @@ _Feedback is appreciated! If you have an idea for how this plugin/library can be
 1. [CORS Generator](#cors-generator)
 1. [AUTO-MOCK Generator](#auto-mock-generator)
 1. [VALIDATION Generator](#validation-generator)
+1. [PROXY Manager](#proxy-manager)
 1. [Configuration Reference](#configuration-reference)
 1. [Known Issues](#known-issues)
    1. [Stage Deployment](#stage-deployment)
@@ -44,9 +45,10 @@ When dealing with functional tests you do not want to test the production enviro
 - auto-generating CORS methods, headers and api gateway mocking response
 - hook into package & deploy lifeCycle and generate combined openApi files on the fly during deployment
 - auto-inject generated openApi file into the Body property of specified API Gateway
-- **[NEW]:** generate mocking responses without specifying x-amazon-apigateway-integration objects
-- **[NEW]:** generate request-validation blocks
-- **[NEW]:** generate all required x-amazon-apigateway-integration objects automatically
+- generate mocking responses without specifying x-amazon-apigateway-integration objects
+- generate request-validation blocks
+- generate all required x-amazon-apigateway-integration objects automatically
+- full proxy generation support with **[NEW]:** feature: [PROXY Manager](#proxy-manager)
 
 See the **examples** folder for a full working [example](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples)
 
@@ -257,6 +259,74 @@ You can customize the VALIDATION template by placing your own files inside a dir
 
 See the [EXAMPLES](https://github.com/yndlingsfar/serverless-openapi-integration-helper/tree/main/examples) directory for detailed instructions.
 
+# Proxy Manager
+
+The proxymanager feature automates the complete generation of an HTTP proxy integration.
+You only have to define the target URL and all necessary AWS integration blocks are generated on-the-fly during deployment.
+
+
+```yml
+openApiIntegration:
+   cors: true
+   validation: true
+   mapping:
+      - stage: [dev, prod]
+        proxyManager:
+           type: http_proxy
+           baseUrl: https://www.example.com
+           pattern: "(?<=api\/v1)\/.+"
+  ...
+```
+
+**With this setting, no separate integration files need to be created**
+
+A combination of your own and auto-generated files is still possible without any problems
+
+## Proxy Manager configuration
+### type
+at the moment only http_proxy supported
+
+### baseUrl
+The base url is required to map the path variable from the openapi specification to the URI from the aws integration.
+
+Example:
+
+```yml
+#original openapi specification
+paths:
+   /api/v1/user:
+    post:
+      ... 
+```
+
+will be translated to
+
+```yml
+#generated openapi specification output
+paths:
+   /api/v1/user:
+      post:
+         ...
+         x-amazon-apigateway-integration:
+            type: http_proxy
+            passthroughBehavior: when_no_match
+            httpMethod: POST
+            uri: https://www.example.com/api/v1/user
+```
+
+### pattern
+
+The pattern can be used to adapt the mapping of the base url using regexp, to remove a prefix, or a version string
+
+Example:
+
+```yml
+baseUrl: https://www.example.com
+pattern: "(?<=api\/v1)\/.+"
+```
+
+will translate the route **/api/v1/user** to https://www.example.com/user
+
 # Configuration Reference
 
 configure the plugin under the key **openApiIntegration**
@@ -271,7 +341,11 @@ openApiIntegration:
   validation: true #optional, defaults to false
   mapping: #optional, can be completely blank if autoMock option is enabled
     - stage: [dev, prod] #multiple stages
-      path: integrations 
+      path: integrations
+      proxyManager: #optional
+         type: http_proxy
+         baseUrl: https://example.com
+         pattern: "(?<=v1)\/.+"
     - stage: test #single stage
       path: mocks/customer.yml
   outputFile: api.yml #optional, defaults to api.yml
