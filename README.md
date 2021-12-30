@@ -334,7 +334,7 @@ configure the plugin under the key **openApiIntegration**
 ```yml
 openApiIntegration:
   inputFile: schema.yml #required
-  package: true #optionl defaults to false 
+  package: true #optional, defaults to false 
   inputDirectory: ./ #optional, defaults to ./
   cors: true #optional, defaults to false
   autoMock: true #optional, defaults to false
