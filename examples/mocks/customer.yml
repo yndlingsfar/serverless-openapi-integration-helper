@@ -29,7 +29,7 @@ paths:
             responseTemplates:
               application/json: |
                 {
-                  id: 1
-                  username: john@doe.com
-                  password: #someRandomPassword
+                  "id": 1
+                  "username": "john@doe.com"
+                  "password": "#someRandomPassword"
                 }
