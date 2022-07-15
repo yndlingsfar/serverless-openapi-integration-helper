@@ -39,6 +39,7 @@ When dealing with functional tests you do not want to test the production enviro
 **The plugin supports YML based OpenApi3 specification files only**
 
 ## Features
+- Serverless 3.x Support
 - deploy stage dependent x-amazon-apigateway integrations
 - separate infrastructure (aws) from openapi specification
 - use mock integrations for functional testing
