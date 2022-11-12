@@ -102,19 +102,22 @@ serverless deploy --stage=test
 
 To handle multiple APIs, supply an array as the value of `openApiIntegrations`
 instead of a single object, and specify the target `Aws::ApiGateway::RestApi`
-resource for each item using the `apiResourceName` property:
+resource for each item using the `apiResourceName` property, and make sure to specify
+unique output files by setting `outputDirectory` and/or `outputFile` uniquely:
 
 ```yml
 openApiIntegration:
   - package: true
     inputFile: schema-1.yml
     apiResourceName: Api1
+    outputFile: api-1.yml
     mapping:
       - stage: [dev, prod]
         path: integrations/api-1
   - package: true
     inputFile: schema-2.yml
     apiResourceName: Api2
+    outputFile: api-2.yml
     mapping:
        - stage: [dev, prod]
          path: integrations/api-2
