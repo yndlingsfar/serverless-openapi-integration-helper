@@ -22,8 +22,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.2.5",
-    "serverless-openapi-integration-helper": "^1.8.0"
+    "mocha": "^2.2.5"
   },
   "peerDependencies": {
     "serverless": "3.x"
