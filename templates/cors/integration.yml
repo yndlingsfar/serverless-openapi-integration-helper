@@ -1,5 +1,6 @@
 x-amazon-apigateway-integration:
   type: mock
+  contentHandling: CONVERT_TO_TEXT
   requestTemplates:
     application/json: |
       {
